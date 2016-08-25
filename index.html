@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>RobotArm - Actions: 0</title>
+	
+	<script type="text/javascript" src="robotarm.js"></script>
+
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<canvas id="frame" width="500px" height="330px">
+	</canvas>
+
+	<script type="text/javascript">
+		let robotarm = new RobotArm();
+		robotarm.set_level(6);
+		robotarm.move_right();
+		robotarm.grab();
+		robotarm.move_left();
+		console.log(robotarm.scan());
+		robotarm.move_right();
+		robotarm.move_right();
+		robotarm.move_right();
+		robotarm.drop();
+		robotarm.move_right();
+		robotarm.grab();
+		robotarm.move_left();
+		robotarm.drop();
+	</script>
+</body>
+</html>
