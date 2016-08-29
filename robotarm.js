@@ -1,16 +1,14 @@
 class RobotArm {
 	
-	constructor() {
+	constructor(speed) {
+		
+		this.step = [];		
+		this.assembly_line = {};
 		this.arm = {
 			position: 0,
 			level: 0,
 			actions: 0,
 			holding: null
-		}
-
-		this.robot_arm = {
-			speed: 0.5,
-			assembly_line: {}
 		}
 
 		this.levels = {
@@ -26,7 +24,8 @@ class RobotArm {
   			'exercise_10' 	: [ [ 'green' ], [ 'blue' ], [ 'white' ], [ 'red' ], [ 'blue' ] ]
 		}
 
-		this.exercise = 0;
+		this.speed = speed || 0.5;
+		this.exercise = 1;
 		this.max_duration = 2000;
 		this.station_width = 50;
 		this.station_count = 10;
@@ -101,7 +100,7 @@ class RobotArm {
 	   		this.draw_line(left, this.line_position - 5, left, this.line_position);
 	    	this.draw_line(right, this.line_position - 5, right, this.line_position);
 	    	
-	    	let stack = this.robot_arm.assembly_line[i];
+	    	let stack = this.assembly_line[i];
 
 	    	if (stack != null) {
 		        
@@ -155,7 +154,7 @@ class RobotArm {
 
 	animate_arm(property_name, start_value, end_value, duration) {
 		
-		if (this.robot_arm.speed >= 1) {
+		if (this.speed >= 1) {
 	    	this.arm[property_name] = end_value
 	    	return;
 		}
@@ -170,7 +169,7 @@ class RobotArm {
 		} else {
 			let exercise = f_id;
 			for (let i = 0; i <= this.station_count - 1; i++) {
-				this.robot_arm.assembly_line[i] = this.levels["exercise_" + exercise][i];	
+				this.assembly_line[i] = this.levels["exercise_" + exercise][i];	
 			}
 			this.draw_arm();
 	 		this.draw_assembly_line();
@@ -194,7 +193,7 @@ class RobotArm {
 	}
 
 	grab() {
-		let stack = this.robot_arm.assembly_line[this.arm.position];
+		let stack = this.assembly_line[this.arm.position];
 		let grab_level = this.level_count - stack.length;
 
 		if (stack.length == 0) {
@@ -211,7 +210,7 @@ class RobotArm {
 			this.arm.holding = stack[stack.length - 1];
 			stack.splice(stack.length - 1, 1);
 		}
-		this.robot_arm.assembly_line[this.arm.position] = stack;
+		this.assembly_line[this.arm.position] = stack;
 		this.animate_arm('level', grab_level, 0, this.max_duration);
 	  	this.increase_actions();
 	}
@@ -222,12 +221,12 @@ class RobotArm {
 	}
 
 	drop() {
-		let stack = this.robot_arm.assembly_line[this.arm.position];
+		let stack = this.assembly_line[this.arm.position];
 		let drop_level = this.level_count - stack.length - 1;
 
 		stack.push(this.arm.holding);
 
-		this.robot_arm.assembly_line[this.arm.position] = stack;
+		this.assembly_line[this.arm.position] = stack;
 		this.arm.holding = null;
 
 		this.animate_arm('level', drop_level, 0, this.max_duration);
